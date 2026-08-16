@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucky Night Casino 🎰</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: radial-gradient(circle at top, #35115c, #100718 65%);
+    color: white;
+    min-height: 100vh;
+}
+
+header {
+    text-align: center;
+    padding: 35px 20px 20px;
+}
+
+.logo {
+    font-size: 42px;
+    font-weight: 900;
+    color: #ffd700;
+    text-shadow: 0 0 20px #ffb700;
+}
+
+.subtitle {
+    color: #c9badb;
+    margin-top: 8px;
+}
+
+.balance-box {
+    width: fit-content;
+    margin: 25px auto;
+    padding: 14px 28px;
+    border-radius: 40px;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,215,0,.4);
+}
+
+.balance-box span {
+    color: #ffd700;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.games {
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+}
+
+.game-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+.game-tab {
+    padding: 14px 25px;
+    border: none;
+    border-radius: 30px;
+    background: #281536;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: .25s;
+}
+
+.game-tab:hover,
+.game-tab.active {
+    background: #8e35c7;
+    box-shadow: 0 0 20px #8e35c7;
+}
+
+.game {
+    display: none;
+    text-align: center;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 30px;
+    padding: 35px 20px;
+    min-height: 550px;
+}
+
+.game.active {
+    display: block;
+}
+
+.game h2 {
+    color: #ffd700;
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.game-description {
+    color: #c9badb;
+    margin-bottom: 25px;
+}
+
+.bet-area {
+    margin: 20px auto;
+}
+
+.bet-area label {
+    display: block;
+    margin-bottom: 8px;
+    color: #ddd;
+}
+
+.bet-input {
+    width: 180px;
+    padding: 12px;
+    text-align: center;
+    border-radius: 15px;
+    border: 2px solid #8e35c7;
+    background: #180c24;
+    color: white;
+    font-size: 18px;
+    outline: none;
+}
+
+.action-btn {
+    margin-top: 20px;
+    padding: 15px 35px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(135deg,#ffd700,#ff9d00);
+    color: #241000;
+    font-size: 18px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 5px 25px rgba(255,190,0,.35);
+    transition: .2s;
+}
+
+.action-btn:hover {
+    transform: scale(1.06);
+}
+
+.action-btn:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+.result {
+    min-height: 35px;
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+
+/* =========================
+   КОЛЕСО
+========================= */
+
+.wheel-container {
+    position: relative;
+    width: min(330px, 85vw);
+    aspect-ratio: 1 / 1;
+    margin: 35px auto;
+}
+
+.wheel {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 10px solid #ffd700;
+
+    background:
+        conic-gradient(
+            #e63946 0deg 45deg,
+            #111 45deg 90deg,
+            #e63946 90deg 135deg,
+            #111 135deg 180deg,
+            #e63946 180deg 225deg,
+            #111 225deg 270deg,
+            #e63946 270deg 315deg,
+            #111 315deg 360deg
+        );
+
+    transition: transform 5s cubic-bezier(.12,.8,.18,1);
+
+    box-shadow:
+        0 0 30px rgba(255,215,0,.4),
+        inset 0 0 25px black;
+
+    overflow: hidden;
+}
+
+.wheel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+
+    background:
+        repeating-conic-gradient(
+            transparent 0deg 43deg,
+            rgba(255,255,255,.5) 43deg 45deg
+        );
+}
+
+.wheel-number {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+
+    width: 60px;
+    height: 35px;
+
+    margin-left: -30px;
+    margin-top: -17px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: white;
+    font-size: clamp(15px, 4vw, 21px);
+    font-weight: 900;
+
+    text-shadow: 0 2px 5px black;
+    z-index: 3;
+}
+
+.n1 {
+    transform: rotate(22.5deg) translateY(-105px) rotate(-22.5deg);
+}
+
+.n2 {
+    transform: rotate(67.5deg) translateY(-105px) rotate(-67.5deg);
+}
+
+.n3 {
+    transform: rotate(112.5deg) translateY(-105px) rotate(-112.5deg);
+}
+
+.n4 {
+    transform: rotate(157.5deg) translateY(-105px) rotate(-157.5deg);
+}
+
+.n5 {
+    transform: rotate(202.5deg) translateY(-105px) rotate(-202.5deg);
+}
+
+.n6 {
+    transform: rotate(247.5deg) translateY(-105px) rotate(-247.5deg);
+}
+
+.n7 {
+    transform: rotate(292.5deg) translateY(-105px) rotate(-292.5deg);
+}
+
+.n8 {
+    transform: rotate(337.5deg) translateY(-105px) rotate(-337.5deg);
+}
+
+.wheel-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 65px;
+    height: 65px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 50%;
+    background: radial-gradient(circle,#ffd700,#b87900);
+
+    border: 5px solid white;
+    font-size: 27px;
+    z-index: 5;
+}
+
+.pointer {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    z-index: 10;
+
+    width: 0;
+    height: 0;
+
+    border-left: 18px solid transparent;
+    border-right: 18px solid transparent;
+    border-top: 35px solid #ffd700;
+
+    filter: drop-shadow(0 2px 3px black);
+}
+
+
+/* =========================
+   РУЛЕТКА
+========================= */
+
+.roulette-board {
+    max-width: 700px;
+    margin: 30px auto;
+}
+
+.numbers {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+}
+
+.number {
+    padding: 15px 5px;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.red {
+    background: #c62828;
+}
+
+.black {
+    background: #111;
+}
+
+.green {
+    background: #087f23;
+}
+
+.number.selected {
+    outline: 4px solid #ffd700;
+    transform: scale(1.05);
+}
+
+.color-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.color-choice {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 20px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.red-choice {
+    background: #c62828;
+}
+
+.black-choice {
+    background: #111;
+}
+
+.green-choice {
+    background: #087f23;
+}
+
+
+/* =========================
+   DOUBLE OR NOTHING
+========================= */
+
+.double-card {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 35px;
+    border-radius: 25px;
+    background: rgba(255,255,255,.07);
+}
+
+.coin-scene {
+    width: 210px;
+    height: 210px;
+
+    margin: 10px auto 20px;
+
+    perspective: 1000px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* Сама монета */
+
+.coin {
+    position: relative;
+
+    width: 180px;
+    height: 180px;
+
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+
+    filter: drop-shadow(0 15px 20px rgba(0,0,0,.55));
+}
+
+
+/* Обе стороны */
+
+.coin-side {
+    position: absolute;
+
+    inset: 0;
+
+    border-radius: 50%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+
+    border: 10px solid #a86400;
+
+    background:
+        radial-gradient(
+            circle at 35% 28%,
+            #fff9bd 0%,
+            #ffe875 20%,
+            #ffc400 48%,
+            #d88b00 75%,
+            #8f4e00 100%
+        );
+
+    box-shadow:
+        inset 0 0 0 5px #fff09a,
+        inset 0 0 20px #824700,
+        0 0 30px rgba(255,215,0,.6);
+}
+
+
+/* Блик */
+
+.coin-side::before {
+    content: "";
+
+    position: absolute;
+
+    width: 70px;
+    height: 28px;
+
+    top: 25px;
+    left: 28px;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.5);
+
+    transform: rotate(-25deg);
+
+    filter: blur(4px);
+}
+
+
+/* ПЕРВАЯ СТОРОНА */
+
+.coin-front {
+    transform: rotateY(0deg) translateZ(3px);
+}
+
+
+/* ВТОРАЯ СТОРОНА */
+
+.coin-back {
+    transform: rotateY(180deg) translateZ(3px);
+}
+
+
+/* Звезда */
+
+.coin-star {
+    font-size: 68px;
+
+    color: #fff8ad;
+
+    line-height: 1;
+
+    text-shadow:
+        0 3px 4px #704000,
+        0 0 12px white;
+}
+
+
+/* Большая двойка */
+
+.coin-number {
+    font-size: 75px;
+
+    font-weight: 900;
+
+    color: #fff8ad;
+
+    line-height: 1;
+
+    text-shadow:
+        0 3px 4px #704000,
+        0 0 12px white;
+}
+
+
+/* Надписи */
+
+.coin-text {
+    margin-top: 5px;
+
+    color: #fffbd5;
+
+    font-size: 17px;
+
+    font-weight: 900;
+
+    letter-spacing: 2px;
+
+    text-shadow:
+        0 2px 4px #704000;
+}
+
+
+/* Анимация */
+
+.coin.flip {
+    animation:
+        coinFlip 1.2s cubic-bezier(.2,.8,.3,1);
+}
+
+@keyframes coinFlip {
+
+    0% {
+        transform: rotateY(0deg) scale(1);
+    }
+
+    20% {
+        transform: rotateY(180deg) scale(1.08);
+    }
+
+    40% {
+        transform: rotateY(540deg) scale(1.13);
+    }
+
+    60% {
+        transform: rotateY(900deg) scale(1.08);
+    }
+
+    80% {
+        transform: rotateY(1260deg) scale(1.04);
+    }
+
+    100% {
+        transform: rotateY(1440deg) scale(1);
+    }
+}
+
+.coin-hint {
+    color: #c9badb;
+    font-size: 14px;
+}
+
+
+/* =========================
+   ИСТОРИЯ
+========================= */
+
+.history {
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+.history h3 {
+    color: #ffd700;
+    margin-bottom: 12px;
+}
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.history-item {
+    padding: 10px 15px;
+    background: rgba(255,255,255,.05);
+    border-radius: 10px;
+    color: #ddd;
+}
+
+
+/* FOOTER */
+
+footer {
+    text-align: center;
+    padding: 30px;
+    color: #877b96;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .logo {
+        font-size: 32px;
+    }
+
+    .wheel-container {
+        width: min(280px,82vw);
+    }
+
+    .numbers {
+        grid-template-columns: repeat(4,1fr);
+    }
+
+    .coin-scene {
+        width: 180px;
+        height: 180px;
+    }
+
+    .coin {
+        width: 155px;
+        height: 155px;
+    }
+
+    .coin-star,
+    .coin-number {
+        font-size: 58px;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+<header>
+
+    <div class="logo">
+        🎰 LUCKY NIGHT
+    </div>
+
+    <div class="subtitle">
+        Виртуальное казино — только для развлечения
+    </div>
+
+    <div class="balance-box">
+        💰 Баланс:
+        <span id="balance">1000</span>
+        фишек
+    </div>
+
+</header>
+
+
+<main class="games">
+
+    <div class="game-tabs">
+
+        <button class="game-tab active" data-game="wheelGame">
+            🎡 Колесо
+        </button>
+
+        <button class="game-tab" data-game="rouletteGame">
+            🎰 Рулетка
+        </button>
+
+        <button class="game-tab" data-game="doubleGame">
+            💥 Double or Nothing
+        </button>
+
+    </div>
+
+
+    <!-- КОЛЕСО -->
+
+    <section class="game active" id="wheelGame">
+
+        <h2>🎡 Колесо удачи</h2>
+
+        <p class="game-description">
+            Сделай ставку и крути колесо!
+        </p>
+
+        <div class="bet-area">
+            <label>Ставка:</label>
+
+            <input
+                class="bet-input"
+                id="wheelBet"
+                type="number"
+                min="1"
+                value="50">
+        </div>
+
+        <div class="wheel-container">
+
+            <div class="pointer"></div>
+
+            <div class="wheel" id="wheel">
+
+                <span class="wheel-number n1">2x</span>
+                <span class="wheel-number n2">0x</span>
+                <span class="wheel-number n3">3x</span>
+                <span class="wheel-number n4">0x</span>
+                <span class="wheel-number n5">5x</span>
+                <span class="wheel-number n6">0x</span>
+                <span class="wheel-number n7">2x</span>
+                <span class="wheel-number n8">10x</span>
+
+                <div class="wheel-center">
+                    🎰
+                </div>
+
+            </div>
+        </div>
+
+        <button class="action-btn" id="spinWheel">
+            🎡 КРУТИТЬ
+        </button>
+
+        <div class="result" id="wheelResult"></div>
+
+    </section>
+
+
+    <!-- РУЛЕТКА -->
+
+    <section class="game" id="rouletteGame">
+
+        <h2>🎰 Рулетка</h2>
+
+        <p class="game-description">
+            Выбери число или цвет.
+        </p>
+
+        <div class="bet-area">
+
+            <label>Ставка:</label>
+
+            <input
+                class="bet-input"
+                id="rouletteBet"
+                type="number"
+                min="1"
+                value="50">
+
+        </div>
+
+        <div class="roulette-board">
+
+            <div class="numbers" id="numbers"></div>
+
+            <div class="color-buttons">
+
+                <button
+                    class="color-choice red-choice"
+                    data-color="red">
+                    🔴 Красное
+                </button>
+
+                <button
+                    class="color-choice black-choice"
+                    data-color="black">
+                    ⚫ Чёрное
+                </button>
+
+                <button
+                    class="color-choice green-choice"
+                    data-color="green">
+                    🟢 0
+                </button>
+
+            </div>
+
+        </div>
+
+        <button class="action-btn" id="spinRoulette">
+            🎰 КРУТИТЬ РУЛЕТКУ
+        </button>
+
+        <div class="result" id="rouletteResult">
+            Выбери число или цвет
+        </div>
+
+    </section>
+
+
+    <!-- DOUBLE OR NOTHING -->
+
+    <section class="game" id="doubleGame">
+
+        <h2>
+            💥 Double or Nothing
+        </h2>
+
+        <p class="game-description">
+            Удвой свои виртуальные фишки или потеряй ставку.
+        </p>
+
+
+        <div class="double-card">
+
+
+            <!-- 🪙 ДВУХСТОРОННЯЯ МОНЕТА -->
+
+            <div class="coin-scene">
+
+                <div class="coin" id="coin">
+
+
+                    <!-- ПЕРВАЯ СТОРОНА -->
+
+                    <div class="coin-side coin-front">
+
+                        <div class="coin-star">
+                            ★
+                        </div>
+
+                        <div class="coin-text">
+                            DOUBLE
+                        </div>
+
+                    </div>
+
+
+                    <!-- ВТОРАЯ СТОРОНА -->
+
+                    <div class="coin-side coin-back">
+
+                        <div class="coin-number">
+                            2
+                        </div>
+
+                        <div class="coin-text">
+                            x2
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <div class="coin-hint">
+                🪙 Монета имеет две стороны!
+            </div>
+
+
+            <div class="bet-area">
+
+                <label>
+                    Ставка:
+                </label>
+
+                <input
+                    class="bet-input"
+                    id="doubleBet"
+                    type="number"
+                    min="1"
+                    value="100">
+
+            </div>
+
+
+            <button
+                class="action-btn"
+                id="doubleButton">
+                💥 DOUBLE
+            </button>
+
+
+            <div
+                class="result"
+                id="doubleResult">
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<div class="history">
+
+    <h3>
+        📜 История игр
+    </h3>
+
+    <div
+        class="history-list"
+        id="history">
+    </div>
+
+</div>
+
+
+<footer>
+
+    🎰 Lucky Night Casino
+    <br>
+    Виртуальные фишки · Без реальных денег
+
+</footer>
+
+
+<script>
+
+/* БАЛАНС */
+
+let balance = 1000;
+
+const balanceElement =
+    document.getElementById("balance");
+
+
+function updateBalance() {
+
+    balanceElement.textContent =
+        balance.toLocaleString("ru-RU");
+
+}
+
+
+/* ИСТОРИЯ */
+
+const history =
+    document.getElementById("history");
+
+
+function addHistory(text) {
+
+    const item =
+        document.createElement("div");
+
+    item.className =
+        "history-item";
+
+    item.textContent =
+        text;
+
+    history.prepend(item);
+
+}
+
+
+/* ПРОВЕРКА СТАВКИ */
+
+function getBet(inputId) {
+
+    const input =
+        document.getElementById(inputId);
+
+    const bet =
+        Number(input.value);
+
+
+    if (
+        !Number.isFinite(bet) ||
+        bet <= 0
+    ) {
+
+        alert("Введите корректную ставку.");
+
+        return null;
+    }
+
+
+    if (bet > balance) {
+
+        alert("Недостаточно фишек.");
+
+        return null;
+    }
+
+
+    return Math.floor(bet);
+
+}
+
+
+/* ПЕРЕКЛЮЧЕНИЕ */
+
+const tabs =
+    document.querySelectorAll(".game-tab");
+
+const games =
+    document.querySelectorAll(".game");
+
+
+tabs.forEach(tab => {
+
+    tab.addEventListener("click", () => {
+
+        tabs.forEach(t =>
+            t.classList.remove("active")
+        );
+
+        games.forEach(game =>
+            game.classList.remove("active")
+        );
+
+        tab.classList.add("active");
+
+        document
+            .getElementById(tab.dataset.game)
+            .classList.add("active");
+
+    });
+
+});
+
+
+/* КОЛЕСО */
+
+const wheel =
+    document.getElementById("wheel");
+
+const spinWheel =
+    document.getElementById("spinWheel");
+
+const wheelResult =
+    document.getElementById("wheelResult");
+
+let wheelRotation = 0;
+
+
+const multipliers = [
+    2,0,3,0,5,0,2,10
+];
+
+
+spinWheel.addEventListener("click", () => {
+
+    const bet =
+        getBet("wheelBet");
+
+    if (bet === null) return;
+
+
+    balance -= bet;
+
+    updateBalance();
+
+    spinWheel.disabled = true;
+
+
+    const randomIndex =
+        Math.floor(
+            Math.random() *
+            multipliers.length
+        );
+
+
+    const multiplier =
+        multipliers[randomIndex];
+
+
+    const sectorAngle =
+        360 / 8;
+
+
+    const targetAngle =
+        360 * 6 +
+        (
+            360 -
+            (
+                randomIndex *
+                sectorAngle +
+                sectorAngle / 2
+            )
+        );
+
+
+    wheelRotation += targetAngle;
+
+    wheel.style.transform =
+        `rotate(${wheelRotation}deg)`;
+
+
+    setTimeout(() => {
+
+        const win =
+            bet * multiplier;
+
+
+        balance += win;
+
+        updateBalance();
+
+
+        if (multiplier === 0) {
+
+            wheelResult.textContent =
+                `😢 Выпало 0x. Вы проиграли ${bet} фишек.`;
+
+            addHistory(
+                `🎡 Колесо: -${bet} фишек`
+            );
+
+        } else {
+
+            wheelResult.textContent =
+                `🎉 ${multiplier}x! Вы получили ${win} фишек!`;
+
+            addHistory(
+                `🎡 Колесо: +${win} фишек`
+            );
+
+        }
+
+
+        spinWheel.disabled = false;
+
+    },5000);
+
+});
+
+
+/* РУЛЕТКА */
+
+const numbers =
+    document.getElementById("numbers");
+
+let selectedBet = null;
+
+
+const redNumbers = [
+    1,3,5,7,9,
+    12,14,16,18,
+    19,21,23,25,27,
+    30,32,34,36
+];
+
+
+for (let number = 0; number <= 36; number++) {
+
+    const button =
+        document.createElement("button");
+
+
+    button.className = "number";
+
+
+    if (number === 0) {
+
+        button.classList.add("green");
+
+    } else if (
+        redNumbers.includes(number)
+    ) {
+
+        button.classList.add("red");
+
+    } else {
+
+        button.classList.add("black");
+
+    }
+
+
+    button.textContent = number;
+
+
+    button.addEventListener("click", () => {
+
+        document
+            .querySelectorAll(".number")
+            .forEach(n =>
+                n.classList.remove("selected")
+            );
+
+
+        button.classList.add("selected");
+
+
+        selectedBet = {
+            type: "number",
+            value: number
+        };
+
+
+        document.getElementById(
+            "rouletteResult"
+        ).textContent =
+            `Выбрано число ${number}`;
+
+    });
+
+
+    numbers.appendChild(button);
+
+}
+
+
+document
+    .querySelectorAll(".color-choice")
+    .forEach(button => {
+
+        button.addEventListener("click", () => {
+
+            selectedBet = {
+                type: "color",
+                value: button.dataset.color
+            };
+
+
+            document
+                .querySelectorAll(".number")
+                .forEach(n =>
+                    n.classList.remove("selected")
+                );
+
+
+            document.getElementById(
+                "rouletteResult"
+            ).textContent =
+                `Выбрано: ${button.textContent}`;
+
+        });
+
+    });
+
+
+document
+    .getElementById("spinRoulette")
+    .addEventListener("click", () => {
+
+        if (!selectedBet) {
+
+            alert(
+                "Сначала выберите число или цвет."
+            );
+
+            return;
+        }
+
+
+        const bet =
+            getBet("rouletteBet");
+
+        if (bet === null) return;
+
+
+        balance -= bet;
+
+        updateBalance();
+
+
+        const result =
+            Math.floor(Math.random() * 37);
+
+
+        let resultColor;
+
+
+        if (result === 0) {
+
+            resultColor = "green";
+
+        } else if (
+            redNumbers.includes(result)
+        ) {
+
+            resultColor = "red";
+
+        } else {
+
+            resultColor = "black";
+
+        }
+
+
+        let win = 0;
+
+
+        if (
+            selectedBet.type === "number" &&
+            selectedBet.value === result
+        ) {
+
+            win = bet * 36;
+
+        }
+
+
+        if (
+            selectedBet.type === "color" &&
+            selectedBet.value === resultColor
+        ) {
+
+            win =
+                resultColor === "green"
+                    ? bet * 36
+                    : bet * 2;
+
+        }
+
+
+        balance += win;
+
+        updateBalance();
+
+
+        const colorName =
+            resultColor === "red"
+                ? "🔴 красное"
+                : resultColor === "black"
+                ? "⚫ чёрное"
+                : "🟢 зелёное";
+
+
+        if (win > 0) {
+
+            document.getElementById(
+                "rouletteResult"
+            ).textContent =
+                `🎉 Выпало ${result}! ${colorName}. Вы выиграли ${win} фишек!`;
+
+            addHistory(
+                `🎰 Рулетка: +${win} фишек`
+            );
+
+        } else {
+
+            document.getElementById(
+                "rouletteResult"
+            ).textContent =
+                `😢 Выпало ${result} (${colorName}). Ставка проиграна.`;
+
+            addHistory(
+                `🎰 Рулетка: -${bet} фишек`
+            );
+
+        }
+
+    });
+
+
+/* =================================
+   💥 DOUBLE OR NOTHING
+================================= */
+
+const doubleButton =
+    document.getElementById("doubleButton");
+
+const coin =
+    document.getElementById("coin");
+
+const doubleResult =
+    document.getElementById("doubleResult");
+
+
+doubleButton.addEventListener("click", () => {
+
+    const bet =
+        getBet("doubleBet");
+
+    if (bet === null) return;
+
+
+    balance -= bet;
+
+    updateBalance();
+
+
+    doubleButton.disabled = true;
+
+
+    /* Перезапускаем анимацию */
+
+    coin.classList.remove("flip");
+
+    void coin.offsetWidth;
+
+    coin.classList.add("flip");
+
+
+    const win =
+        Math.random() < 0.5;
+
+
+    setTimeout(() => {
+
+        if (win) {
+
+            const prize =
+                bet * 2;
+
+
+            balance += prize;
+
+            updateBalance();
+
+
+            doubleResult.textContent =
+                `🎉 УСПЕХ! Вы удвоили ставку и получили ${prize} фишек!`;
+
+
+            addHistory(
+                `💥 Double or Nothing: +${prize} фишек`
+            );
+
+        } else {
+
+            doubleResult.textContent =
+                `💀 Не повезло! Вы потеряли ${bet} фишек.`;
+
+            addHistory(
+                `💥 Double or Nothing: -${bet} фишек`
+            );
+
+        }
+
+
+        doubleButton.disabled = false;
+
+    },1200);
+
+});
+
+</script>
+
+</body>
+</html>
