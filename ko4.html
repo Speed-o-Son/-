@@ -1,0 +1,908 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>КОЧ БРАТАН 😎</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+
+      font-family: Arial, Helvetica, sans-serif;
+
+      background:
+        radial-gradient(circle at 50% 40%, #302000 0%, #120d00 35%, #050505 75%);
+
+      color: white;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    body::before {
+      content: "";
+
+      position: fixed;
+      inset: 0;
+
+      background-image:
+        linear-gradient(rgba(255, 190, 0, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 190, 0, 0.05) 1px, transparent 1px);
+
+      background-size: 40px 40px;
+
+      pointer-events: none;
+    }
+
+    .game {
+      position: relative;
+      z-index: 2;
+
+      width: min(900px, 95%);
+
+      text-align: center;
+
+      padding: 30px;
+    }
+
+    .emoji {
+      font-size: 75px;
+
+      animation: bounce 1.2s infinite alternate;
+
+      filter: drop-shadow(0 0 20px #ffb700);
+    }
+
+    h1 {
+      font-size: clamp(60px, 13vw, 150px);
+
+      font-weight: 1000;
+
+      letter-spacing: -8px;
+
+      color: #ffcc00;
+
+      text-shadow:
+        5px 5px 0 #8a5500,
+        0 0 20px #ffae00,
+        0 0 60px #ff7b00;
+
+      animation: shake 2s infinite;
+    }
+
+    .subtitle {
+      margin-top: 5px;
+
+      font-size: clamp(20px, 4vw, 35px);
+
+      font-weight: bold;
+    }
+
+    /* СЧЁТЧИК */
+
+    .counter-box {
+      margin: 30px auto;
+
+      padding: 20px;
+
+      max-width: 500px;
+
+      border: 2px solid #ffb700;
+
+      border-radius: 25px;
+
+      background: rgba(255, 174, 0, 0.08);
+
+      box-shadow:
+        0 0 25px rgba(255, 174, 0, 0.2),
+        inset 0 0 30px rgba(255, 174, 0, 0.05);
+    }
+
+    .counter-title {
+      color: #aaa;
+
+      font-size: 16px;
+
+      text-transform: uppercase;
+
+      letter-spacing: 3px;
+    }
+
+    #counter {
+      margin-top: 5px;
+
+      font-size: 65px;
+
+      font-weight: 1000;
+
+      color: #ffcc00;
+
+      text-shadow: 0 0 20px #ffae00;
+    }
+
+    #perClick {
+      color: #ff9900;
+
+      font-weight: bold;
+    }
+
+    /* КНОПКА */
+
+    .button {
+      margin-top: 10px;
+
+      padding: 20px 55px;
+
+      border: none;
+
+      border-radius: 50px;
+
+      background: linear-gradient(
+        135deg,
+        #ffdd00,
+        #ff7b00
+      );
+
+      color: #111;
+
+      font-size: 25px;
+
+      font-weight: 1000;
+
+      cursor: pointer;
+
+      box-shadow:
+        0 0 25px rgba(255, 174, 0, 0.6);
+
+      transition: 0.15s;
+    }
+
+    .button:hover {
+      transform: scale(1.08);
+
+      box-shadow:
+        0 0 45px rgba(255, 174, 0, 1);
+    }
+
+    .button:active {
+      transform: scale(0.93);
+    }
+
+    #message {
+      min-height: 40px;
+
+      margin-top: 20px;
+
+      font-size: 24px;
+
+      font-weight: bold;
+
+      color: #ffcc00;
+    }
+
+    /* АПГРЕЙДЫ */
+
+    .upgrades {
+      margin-top: 35px;
+    }
+
+    .upgrades h2 {
+      margin-bottom: 15px;
+
+      color: #ffcc00;
+    }
+
+    .upgrade-list {
+      display: grid;
+
+      grid-template-columns:
+        repeat(auto-fit, minmax(180px, 1fr));
+
+      gap: 12px;
+    }
+
+    .upgrade {
+      padding: 15px;
+
+      border-radius: 18px;
+
+      border: 1px solid #444;
+
+      background: rgba(255, 255, 255, 0.05);
+
+      transition: 0.3s;
+    }
+
+    .upgrade.locked {
+      opacity: 0.35;
+
+      filter: grayscale(1);
+    }
+
+    .upgrade.unlocked {
+      border-color: #ffb700;
+
+      background:
+        rgba(255, 174, 0, 0.12);
+
+      box-shadow:
+        0 0 20px rgba(255, 174, 0, 0.25);
+    }
+
+    .upgrade-icon {
+      font-size: 35px;
+    }
+
+    .upgrade-name {
+      margin-top: 5px;
+
+      font-weight: bold;
+    }
+
+    .upgrade-cost {
+      margin-top: 5px;
+
+      color: #aaa;
+
+      font-size: 14px;
+    }
+
+    .upgrade-bonus {
+      margin-top: 5px;
+
+      color: #ff9900;
+
+      font-weight: bold;
+    }
+
+    /* ЛЕТАЮЩИЕ ЭМОДЗИ */
+
+    .fire {
+      position: fixed;
+
+      font-size: 30px;
+
+      pointer-events: none;
+
+      z-index: 100;
+
+      animation:
+        fly 1.2s ease-out forwards;
+    }
+
+    .floating-number {
+      position: fixed;
+
+      pointer-events: none;
+
+      color: #ffcc00;
+
+      font-size: 25px;
+
+      font-weight: bold;
+
+      z-index: 100;
+
+      animation:
+        numberFly 0.8s ease-out forwards;
+    }
+
+    @keyframes bounce {
+      from {
+        transform:
+          translateY(0)
+          rotate(-5deg);
+      }
+
+      to {
+        transform:
+          translateY(-20px)
+          rotate(5deg);
+      }
+    }
+
+    @keyframes shake {
+      0%, 100% {
+        transform: rotate(0deg);
+      }
+
+      25% {
+        transform: rotate(-1deg);
+      }
+
+      75% {
+        transform: rotate(1deg);
+      }
+    }
+
+    @keyframes fly {
+      0% {
+        transform:
+          translate(0, 0)
+          scale(1);
+
+        opacity: 1;
+      }
+
+      100% {
+        transform:
+          translate(
+            calc((var(--x) - 50) * 1vw),
+            calc((var(--y) - 50) * 1vh)
+          )
+          scale(0.2)
+          rotate(720deg);
+
+        opacity: 0;
+      }
+    }
+
+    @keyframes numberFly {
+      0% {
+        transform: translateY(0);
+
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(-70px);
+
+        opacity: 0;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .game {
+        padding: 15px;
+      }
+
+      #counter {
+        font-size: 50px;
+      }
+
+      .button {
+        width: 100%;
+
+        padding: 18px 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="game">
+
+    <div class="emoji">😎</div>
+
+    <h1>КОЧ</h1>
+
+    <div class="subtitle">
+      БРАТАН 🔥
+    </div>
+
+
+    <!-- СЧЁТЧИК -->
+
+    <div class="counter-box">
+
+      <div class="counter-title">
+        КОЛИЧЕСТВО КОЧЕЙ
+      </div>
+
+      <div id="counter">
+        0
+      </div>
+
+      <div>
+        За один клик:
+        <span id="perClick">1</span> 💪
+      </div>
+
+    </div>
+
+
+    <!-- КНОПКА -->
+
+    <button
+      class="button"
+      id="kochButton"
+      onclick="koch(event)"
+    >
+      КОЧУЕМ 🚀
+    </button>
+
+    <div id="message">
+      Жми, братан!
+    </div>
+
+
+    <!-- АПГРЕЙДЫ -->
+
+    <section class="upgrades">
+
+      <h2>
+        🔥 АПГРЕЙДЫ БРАТАНА
+      </h2>
+
+      <div
+        class="upgrade-list"
+        id="upgradeList"
+      ></div>
+
+    </section>
+
+  </main>
+
+
+  <script>
+
+    let clicks = 0;
+
+    let power = 1;
+
+    let unlockedUpgrades = [];
+
+
+    /*
+      Список апгрейдов.
+
+      clicks — сколько нужно кликов.
+
+      bonus — сколько добавляется
+      к силе каждого клика.
+    */
+
+    const upgrades = [
+
+      {
+        clicks: 10,
+        icon: "🥉",
+        name: "Новичок",
+        bonus: 1
+      },
+
+      {
+        clicks: 50,
+        icon: "🥈",
+        name: "Братан",
+        bonus: 2
+      },
+
+      {
+        clicks: 100,
+        icon: "🥇",
+        name: "Легенда",
+        bonus: 5
+      },
+
+      {
+        clicks: 250,
+        icon: "🔥",
+        name: "КОЧ МАШИНА",
+        bonus: 10
+      },
+
+      {
+        clicks: 500,
+        icon: "👑",
+        name: "БОГ КОЧА",
+        bonus: 25
+      },
+
+      {
+        clicks: 1000,
+        icon: "💎",
+        name: "КОЧ ИМПЕРАТОР",
+        bonus: 100
+      }
+
+    ];
+
+
+    /*
+      Создание карточек апгрейдов
+    */
+
+    function createUpgrades() {
+
+      const list =
+        document.getElementById(
+          "upgradeList"
+        );
+
+      list.innerHTML = "";
+
+      upgrades.forEach(
+        (upgrade, index) => {
+
+          const div =
+            document.createElement("div");
+
+          div.className =
+            "upgrade locked";
+
+          div.id =
+            "upgrade-" + index;
+
+          div.innerHTML = `
+
+            <div class="upgrade-icon">
+              ${upgrade.icon}
+            </div>
+
+            <div class="upgrade-name">
+              ${upgrade.name}
+            </div>
+
+            <div class="upgrade-cost">
+              Нужно: ${upgrade.clicks}
+              кликов
+            </div>
+
+            <div class="upgrade-bonus">
+              +${upgrade.bonus}
+              за клик
+            </div>
+
+          `;
+
+          list.appendChild(div);
+
+        }
+      );
+
+    }
+
+
+    /*
+      Основная функция клика
+    */
+
+    function koch(event) {
+
+      clicks += power;
+
+      updateCounter();
+
+      checkUpgrades();
+
+      createFire();
+
+      createNumber(event);
+
+      randomMessage();
+
+      shakeScreen();
+
+    }
+
+
+    /*
+      Обновление счётчика
+    */
+
+    function updateCounter() {
+
+      document.getElementById(
+        "counter"
+      ).textContent =
+        clicks.toLocaleString();
+
+      document.getElementById(
+        "perClick"
+      ).textContent =
+        power.toLocaleString();
+
+    }
+
+
+    /*
+      Проверяем, открылись ли новые апгрейды
+    */
+
+    function checkUpgrades() {
+
+      upgrades.forEach(
+        (upgrade, index) => {
+
+          if (
+            clicks >= upgrade.clicks &&
+            !unlockedUpgrades.includes(index)
+          ) {
+
+            unlockedUpgrades.push(index);
+
+            power += upgrade.bonus;
+
+            const element =
+              document.getElementById(
+                "upgrade-" + index
+              );
+
+            element.classList.remove(
+              "locked"
+            );
+
+            element.classList.add(
+              "unlocked"
+            );
+
+            showUpgradeMessage(
+              upgrade
+            );
+
+          }
+
+        }
+      );
+
+    }
+
+
+    /*
+      Сообщение при получении апгрейда
+    */
+
+    function showUpgradeMessage(
+      upgrade
+    ) {
+
+      const message =
+        document.getElementById(
+          "message"
+        );
+
+      message.textContent =
+        `${upgrade.icon} АПГРЕЙД: ${upgrade.name}! +${upgrade.bonus} к силе!`;
+
+      message.animate(
+        [
+          {
+            transform:
+              "scale(1)"
+          },
+
+          {
+            transform:
+              "scale(1.25)"
+          },
+
+          {
+            transform:
+              "scale(1)"
+          }
+        ],
+        {
+          duration: 500
+        }
+      );
+
+    }
+
+
+    /*
+      Случайные мемные сообщения
+    */
+
+    function randomMessage() {
+
+      const messages = [
+
+        "КОЧУЕМ, БРАТАН! 🔥",
+
+        "ВОТ ЭТО ДВИЖ 😎",
+
+        "ЕЩЁ КЛИК, БРАТАН!",
+
+        "ЛЕГЕНДА РАСТЁТ 💪",
+
+        "НЕ ОСТАНАВЛИВАЙСЯ 🚀",
+
+        "КОЧ-КОЧ-КОЧ 🗿",
+
+        "БРАТАН, ТЫ МАШИНА 🔥",
+
+        "ЕЩЁЁЁЁ! 😂"
+
+      ];
+
+      /*
+        Не заменяем сообщение слишком часто,
+        чтобы апгрейд мог нормально отображаться.
+      */
+
+      if (
+        Math.random() > 0.75
+      ) {
+
+        const message =
+          document.getElementById(
+            "message"
+          );
+
+        message.textContent =
+          messages[
+            Math.floor(
+              Math.random() *
+              messages.length
+            )
+          ];
+
+      }
+
+    }
+
+
+    /*
+      Создание летящих эмодзи
+    */
+
+    function createFire() {
+
+      const fire =
+        document.createElement(
+          "div"
+        );
+
+      const emojis = [
+        "🔥",
+        "😎",
+        "🚀",
+        "💪",
+        "🗿",
+        "⚡"
+      ];
+
+      fire.className = "fire";
+
+      fire.textContent =
+        emojis[
+          Math.floor(
+            Math.random() *
+            emojis.length
+          )
+        ];
+
+      fire.style.left = "50%";
+      fire.style.top = "50%";
+
+      fire.style.setProperty(
+        "--x",
+        Math.random() * 160 - 30
+      );
+
+      fire.style.setProperty(
+        "--y",
+        Math.random() * 160 - 30
+      );
+
+      document.body.appendChild(
+        fire
+      );
+
+      setTimeout(
+        () => fire.remove(),
+        1200
+      );
+
+    }
+
+
+    /*
+      +1 / +2 / +10 над кнопкой
+    */
+
+    function createNumber(event) {
+
+      const number =
+        document.createElement(
+          "div"
+        );
+
+      number.className =
+        "floating-number";
+
+      number.textContent =
+        "+" + power;
+
+      if (event) {
+
+        number.style.left =
+          event.clientX + "px";
+
+        number.style.top =
+          event.clientY + "px";
+
+      } else {
+
+        number.style.left =
+          "50%";
+
+        number.style.top =
+          "50%";
+
+      }
+
+      document.body.appendChild(
+        number
+      );
+
+      setTimeout(
+        () => number.remove(),
+        800
+      );
+
+    }
+
+
+    /*
+      Тряска экрана
+    */
+
+    function shakeScreen() {
+
+      document.body.animate(
+        [
+          {
+            transform:
+              "translateX(0)"
+          },
+
+          {
+            transform:
+              "translateX(-5px)"
+          },
+
+          {
+            transform:
+              "translateX(5px)"
+          },
+
+          {
+            transform:
+              "translateX(-3px)"
+          },
+
+          {
+            transform:
+              "translateX(3px)"
+          },
+
+          {
+            transform:
+              "translateX(0)"
+          }
+        ],
+        {
+          duration: 150
+        }
+      );
+
+    }
+
+
+    /*
+      Запускаем игру
+    */
+
+    createUpgrades();
+
+    updateCounter();
+
+  </script>
+
+</body>
+</html>
